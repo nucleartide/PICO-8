@@ -1,13 +1,77 @@
 pico-8 cartridge // http://www.pico-8.com
 version 15
 __lua__
+
+--
+-- game loop.
+--
+
+function _init()
+ g = game()
+end
+
 function _update60()
 end
 
 function _draw()
  cls()
- map(0,0,0,0,128,128)
+ map(0, 0, 0, 0, 128, 128)
+ player.draw(g.player)
 end
+-->8
+
+--
+-- entities.
+--
+
+--
+-- player.
+--
+-- usage:
+--
+--  p = player()
+--  player.update(p)
+--  player.draw(p)
+--
+
+player = {}
+
+setmetatable(player, {
+ __call = function(_, x, y)
+  return {
+   sp = 1,
+   x = x,
+   y = y,
+  }
+ end,
+})
+
+-- player -> player
+-- this function is pure.
+function player.update(p)
+ return p
+end
+
+-- player -> void
+function player.draw(p)
+ spr(p.sp, p.x, p.y)
+end
+
+--
+-- game.
+--
+
+game = {}
+
+setmetatable(game, {
+ __call = function()
+  return {
+   player = player(),
+  }
+ end,
+})
+
+-- todo: make player move.
 __gfx__
 00000000000000001111111100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000001999999100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
